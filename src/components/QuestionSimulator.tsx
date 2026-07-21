@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { Question, SubjectId, UserProgress, RevisionCard } from "../types";
 import { QUESTIONS_DATA } from "../data/questions";
 import { SYLLABUS_DATA } from "../data/syllabus";
@@ -70,6 +70,9 @@ export default function QuestionSimulator({
   const [currentIdx, setCurrentIdx] = useState<number>(0);
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [isAnswered, setIsAnswered] = useState<boolean>(false);
+  const [forceShowExplanation, setForceShowExplanation] = useState<boolean>(false);
+  const autoNextTimerRef = useRef<number | null>(null);
+  const lastActiveQuestionIdRef = useRef<string | null | undefined>(progress.lastActiveQuestionId);
   
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [customQuestions, setCustomQuestions] = useState<Question[]>([]);
@@ -96,6 +99,18 @@ export default function QuestionSimulator({
     fetchCustomQuestions();
   }, []);
 
+  useEffect(() => {
+    lastActiveQuestionIdRef.current = progress.lastActiveQuestionId;
+  }, [progress.lastActiveQuestionId]);
+
+  useEffect(() => {
+    return () => {
+      if (autoNextTimerRef.current !== null) {
+        window.clearTimeout(autoNextTimerRef.current);
+      }
+    };
+  }, []);
+
   // Sync and filter logic
   useEffect(() => {
     let list = [...visibleQuestions];
@@ -113,17 +128,25 @@ export default function QuestionSimulator({
     setFilteredQuestions(list);
     
     let initialIdx = 0;
-    if (progress.lastActiveQuestionId) {
-      const savedIdx = list.findIndex(q => q.id === progress.lastActiveQuestionId);
+    if (lastActiveQuestionIdRef.current) {
+      const savedIdx = list.findIndex(q => q.id === lastActiveQuestionIdRef.current);
       if (savedIdx !== -1) {
         initialIdx = savedIdx;
       }
     }
     
+    const newCurrentQuestion = list[initialIdx];
+    const prevCurrentId = currentQuestion ? currentQuestion.id : null;
+
     setCurrentIdx(initialIdx);
-    setSelectedOption(null);
-    setIsAnswered(false);
-  }, [selectedSubjectId, selectedTopicId, singleRevisionQuestion, visibleQuestions, progress.lastActiveQuestionId]);
+
+    // If the active question did not change, avoid resetting answer state
+    if (prevCurrentId !== newCurrentQuestion?.id) {
+      setSelectedOption(null);
+      setIsAnswered(false);
+      setForceShowExplanation(false);
+    }
+  }, [selectedSubjectId, selectedTopicId, singleRevisionQuestion, visibleQuestions]);
 
   const currentQuestion = filteredQuestions[currentIdx];
 
@@ -183,15 +206,30 @@ export default function QuestionSimulator({
     
     const isCorrect = selectedOption === currentQuestion.correctOptionIndex;
     setIsAnswered(true);
+    setForceShowExplanation(true);
     if (isCorrect) {
       playCorrectSound();
     }
     onAnswer(currentQuestion.id, isCorrect);
+
+    if (autoNextTimerRef.current !== null) {
+      window.clearTimeout(autoNextTimerRef.current);
+    }
+
+    autoNextTimerRef.current = window.setTimeout(() => {
+      handleNext();
+    }, 1500);
   };
 
   const handleNext = () => {
+    if (autoNextTimerRef.current !== null) {
+      window.clearTimeout(autoNextTimerRef.current);
+      autoNextTimerRef.current = null;
+    }
+
     setSelectedOption(null);
     setIsAnswered(false);
+    setForceShowExplanation(false);
     if (currentIdx + 1 < filteredQuestions.length) {
       setCurrentIdx(currentIdx + 1);
     } else {
@@ -536,10 +574,10 @@ export default function QuestionSimulator({
               {/* Submit/Next Control bar */}
               <div className="flex items-center justify-between border-t border-slate-100 dark:border-slate-800 pt-5">
                 <div className="text-xs text-slate-400 dark:text-slate-500 font-medium">
-                  {isAnswered ? "Estude a justificativa fundamentada do artigo abaixo." : "Selecione uma alternativa acima para responder."}
+                  {(isAnswered || forceShowExplanation) ? "Estude a justificativa fundamentada do artigo abaixo." : "Selecione uma alternativa acima para responder."}
                 </div>
 
-                {isAnswered ? (
+                {(isAnswered || forceShowExplanation) ? (
                   <button
                     onClick={handleNext}
                     className="text-xs font-bold px-5 py-2.5 rounded-lg bg-slate-900 dark:bg-slate-800 text-white hover:bg-slate-800 dark:hover:bg-slate-700 flex items-center gap-1.5 cursor-pointer transition-colors"
@@ -567,7 +605,7 @@ export default function QuestionSimulator({
           </div>
 
           {/* 3. Detailed Explanation Panel */}
-          {isAnswered && (
+          {(isAnswered || forceShowExplanation) && (
             <div className="space-y-4 animate-slide-up">
               {/* Active Error repetition trigger explanation */}
               {selectedOption !== currentQuestion.correctOptionIndex ? (

@@ -16,7 +16,7 @@ import {
   ThumbsUp,
   Percent
 } from "lucide-react";
-import logoPPRS from '../assets/images/logo_pprs.jpg';
+import logo from '../../assets/logo.png';
 
 interface DashboardProps {
   progress: UserProgress;
@@ -118,7 +118,7 @@ export default function Dashboard({ progress, revisions, onNavigate }: Dashboard
         
         <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
-            <img src={logoPPRS} alt="Polícia Penal RS" className="w-24 h-auto object-contain drop-shadow-2xl" />
+            <img src={logo} alt="Polícia Penal RS" className="w-24 h-auto object-contain drop-shadow-2xl" />
             <div className="space-y-3 text-center sm:text-left">
               <span className="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-semibold bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 tracking-wider uppercase">
                 Concurso Oficial PPRS 2026

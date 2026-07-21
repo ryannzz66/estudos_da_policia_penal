@@ -13,7 +13,7 @@ import QuestionSimulator from "./components/QuestionSimulator";
 import MnemonicMacetes from "./components/MnemonicMacetes";
 import RevisionManager from "./components/RevisionManager";
 import AuthManager from "./components/AuthManager";
-import logoPPRS from './assets/images/logo_pprs.jpg';
+import logo from '../assets/logo.png';
 import { auth, db, handleFirestoreError, OperationType } from "./lib/firebase";
 import { onAuthStateChanged, User as FirebaseUser } from "firebase/auth";
 import { doc, getDoc, setDoc, serverTimestamp, onSnapshot } from "firebase/firestore";
@@ -686,7 +686,7 @@ export default function App() {
             </button>
 
             <div className="flex items-center gap-2 border-b border-slate-800 pb-4">
-              <img src={logoPPRS} alt="PPRS" className="w-8 h-8 object-contain shrink-0 rounded-sm" />
+              <img src={logo} alt="PPRS" className="w-8 h-8 object-contain shrink-0 rounded-sm" />
               <div>
                 <span className="font-black text-sm tracking-tight text-white block">PPRS PREP</span>
                 <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Polícia Penal RS</span>
@@ -746,7 +746,7 @@ export default function App() {
         <div className="space-y-6">
           {/* Brand header */}
           <div className="flex items-center gap-2 border-b border-slate-800 pb-4">
-            <img src={logoPPRS} alt="PPRS" className="w-8 h-8 object-contain shrink-0 rounded-sm" />
+            <img src={logo} alt="PPRS" className="w-8 h-8 object-contain shrink-0 rounded-sm" />
             <div>
               <span className="font-black text-sm tracking-tight text-white block">PPRS PREP</span>
               <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Polícia Penal RS</span>
