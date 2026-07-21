@@ -1,0 +1,35 @@
+type User @table {
+  email: String!
+  displayName: String!
+  timezone: String
+}
+
+type Subject @table {
+  title: String!
+  user: User!
+  createdAt: Timestamp!
+  goalDate: Date
+  description: String
+}
+
+type Lesson @table {
+  title: String!
+  subject: Subject!
+  isCompleted: Boolean!
+  contentUrl: String
+  orderIndex: Int
+}
+
+type StudySession @table {
+  subject: Subject!
+  durationMinutes: Int!
+  date: Timestamp!
+  notes: String
+}
+
+type Resource @table {
+  subject: Subject!
+  url: String!
+  title: String
+  type: String
+}

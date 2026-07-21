@@ -1,0 +1,130 @@
+mutation InsertUser @auth(level: USER) {
+  user_insert(data: {id_expr: "auth.uid", email: "user@example.com", displayName: "New User"})
+}
+
+mutation UpdateUser @auth(level: USER) {
+  user_update(key: {id_expr: "auth.uid"}, data: {displayName: "Updated Name"})
+}
+
+mutation DeleteUser @auth(level: USER) {
+  user_delete(key: {id_expr: "auth.uid"})
+}
+
+query GetUser @auth(level: USER) {
+  user(key: {id_expr: "auth.uid"}) {
+    email
+    displayName
+  }
+}
+
+query ListUsers @auth(level: PUBLIC, insecureReason: "Publicly accessible list of users.") {
+  users {
+    id
+    displayName
+  }
+}
+
+mutation InsertSubject @auth(level: USER) {
+  subject_insert(data: {title: "Math", userId_expr: "auth.uid", createdAt_expr: "request.time"})
+}
+
+mutation UpdateSubject($id: UUID!) @auth(level: USER) {
+  subject_update(key: {id: $id}, data: {title: "Advanced Math"})
+}
+
+mutation DeleteSubject($id: UUID!) @auth(level: USER) {
+  subject_delete(key: {id: $id})
+}
+
+query GetSubject($id: UUID!) @auth(level: USER) {
+  subject(id: $id) {
+    title
+    createdAt
+  }
+}
+
+query ListSubjects @auth(level: USER) {
+  subjects(where: {userId: {eq_expr: "auth.uid"}}) {
+    id
+    title
+  }
+}
+
+mutation InsertLesson @auth(level: USER) {
+  lesson_insert(data: {title: "Algebra 101", subject: {id: "550e8400-e29b-41d4-a716-446655440000"}, isCompleted: false})
+}
+
+mutation UpdateLesson($id: UUID!) @auth(level: USER) {
+  lesson_update(key: {id: $id}, data: {isCompleted: true})
+}
+
+mutation DeleteLesson($id: UUID!) @auth(level: USER) {
+  lesson_delete(key: {id: $id})
+}
+
+query GetLesson($id: UUID!) @auth(level: USER) {
+  lesson(id: $id) {
+    title
+    isCompleted
+  }
+}
+
+query ListLessons @auth(level: USER) {
+  lessons {
+    id
+    title
+    subject { title }
+  }
+}
+
+mutation InsertStudySession @auth(level: USER) {
+  studySession_insert(data: {subject: {id: "550e8400-e29b-41d4-a716-446655440000"}, durationMinutes: 60, date_expr: "request.time"})
+}
+
+mutation UpdateStudySession($id: UUID!) @auth(level: USER) {
+  studySession_update(key: {id: $id}, data: {durationMinutes: 90})
+}
+
+mutation DeleteStudySession($id: UUID!) @auth(level: USER) {
+  studySession_delete(key: {id: $id})
+}
+
+query GetStudySession($id: UUID!) @auth(level: USER) {
+  studySession(id: $id) {
+    durationMinutes
+    notes
+  }
+}
+
+query ListStudySessions @auth(level: USER) {
+  studySessions {
+    id
+    durationMinutes
+  }
+}
+
+mutation InsertResource @auth(level: USER) {
+  resource_insert(data: {subject: {id: "550e8400-e29b-41d4-a716-446655440000"}, url: "https://example.com/resource"})
+}
+
+mutation UpdateResource($id: UUID!) @auth(level: USER) {
+  resource_update(key: {id: $id}, data: {title: "Reference Material"})
+}
+
+mutation DeleteResource($id: UUID!) @auth(level: USER) {
+  resource_delete(key: {id: $id})
+}
+
+query GetResource($id: UUID!) @auth(level: USER) {
+  resource(id: $id) {
+    url
+    title
+  }
+}
+
+query ListResources @auth(level: USER) {
+  resources {
+    id
+    url
+  }
+}

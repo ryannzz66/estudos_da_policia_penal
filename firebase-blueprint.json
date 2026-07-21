@@ -1,0 +1,32 @@
+{
+  "collections": {
+    "users": {
+      "schema": {
+        "email": "string",
+        "createdAt": "timestamp"
+      }
+    },
+    "user_progress": {
+      "schema": {
+        "answeredQuestions": "map",
+        "completedTopics": "map",
+        "pdf1Topics": "map",
+        "pdf2Topics": "map",
+        "r1Topics": "map",
+        "r2Topics": "map",
+        "r3Topics": "map",
+        "controleTopics": "map",
+        "streak": "number",
+        "lastActiveDate": "string",
+        "history": "array",
+        "updatedAt": "timestamp"
+      }
+    },
+    "user_revisions": {
+      "schema": {
+        "revisions": "array",
+        "updatedAt": "timestamp"
+      }
+    }
+  }
+}

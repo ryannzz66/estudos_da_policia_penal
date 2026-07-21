@@ -1,0 +1,78 @@
+mutation CreateSeedData @transaction {
+  user_insertMany(data: [
+    {
+      id: "00000000-0000-0000-0000-000000000001",
+      email: "alice@example.com",
+      displayName: "Alice",
+      timezone: "UTC"
+    },
+    {
+      id: "00000000-0000-0000-0000-000000000002",
+      email: "bob@example.com",
+      displayName: "Bob",
+      timezone: "PST"
+    }
+  ])
+  subject_insertMany(data: [
+    {
+      id: "10000000-0000-0000-0000-000000000001",
+      userId: "00000000-0000-0000-0000-000000000001",
+      title: "Mathematics",
+      createdAt: "2023-01-01T00:00:00Z"
+    },
+    {
+      id: "10000000-0000-0000-0000-000000000002",
+      userId: "00000000-0000-0000-0000-000000000002",
+      title: "History",
+      createdAt: "2023-02-01T00:00:00Z"
+    }
+  ])
+  lesson_insertMany(data: [
+    {
+      title: "Algebra Basics",
+      subjectId: "10000000-0000-0000-0000-000000000001",
+      isCompleted: false,
+      orderIndex: 1
+    },
+    {
+      title: "Geometry 101",
+      subjectId: "10000000-0000-0000-0000-000000000001",
+      isCompleted: true,
+      orderIndex: 2
+    },
+    {
+      title: "Ancient Rome",
+      subjectId: "10000000-0000-0000-0000-000000000002",
+      isCompleted: false,
+      orderIndex: 1
+    }
+  ])
+  resource_insertMany(data: [
+    {
+      subjectId: "10000000-0000-0000-0000-000000000001",
+      url: "https://math.edu/algebra",
+      title: "Algebra Textbook",
+      type: "PDF"
+    },
+    {
+      subjectId: "10000000-0000-0000-0000-000000000002",
+      url: "https://history.edu/rome",
+      title: "Rome Documentary",
+      type: "Video"
+    }
+  ])
+  studySession_insertMany(data: [
+    {
+      subjectId: "10000000-0000-0000-0000-000000000001",
+      durationMinutes: 60,
+      date: "2023-05-01T10:00:00Z",
+      notes: "Focused on factoring polynomials"
+    },
+    {
+      subjectId: "10000000-0000-0000-0000-000000000002",
+      durationMinutes: 45,
+      date: "2023-05-02T14:00:00Z",
+      notes: "Reading chapter 3"
+    }
+  ])
+}

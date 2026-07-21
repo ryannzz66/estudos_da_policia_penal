@@ -1,0 +1,6 @@
+{
+  "name": "Portal de Estudos Polícia Penal RS",
+  "description": "Plataforma de estudos completa para o concurso da Polícia Penal RS, com questões por artigo, revisões espaçadas de erros, teoria resumida e macetes para português, informática, raciocínio lógico e legislação.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
